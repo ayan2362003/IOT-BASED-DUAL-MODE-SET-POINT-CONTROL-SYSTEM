@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="project/full%20hardware.jpg" alt="IoT Dual Mode Set Point Controller - Full Hardware Setup" width="700"/>
-</p>
-
 <h1 align="center">🌡️ IoT Dual Mode Temperature Set Point Controller</h1>
 
 <p align="center">
@@ -60,13 +56,15 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 | Operator is **remote** | ☁️ Remote | Update Field 2 on ThingSpeak dashboard → MCU syncs every 3 min → applies new set point |
 | **First boot** / empty EEPROM | 🔄 Default | Automatically loads `30.0°C` as the default set point |
 
-### 📺 LCD Display Output
+### 📷 Project In Action
 
 <p align="center">
-  <img src="project/tep%20and%20se%20show%20display.png" alt="LCD Display showing Temperature and Set Point" width="700"/>
+  <img src="project/full%20hardware.jpg" alt="IoT Dual Mode Set Point Controller - Full Hardware Setup" width="600"/>
+  &nbsp;&nbsp;
+  <img src="project/tep%20and%20se%20show%20display.png" alt="LCD Display showing Temperature and Set Point" width="600"/>
 </p>
 
-<p align="center"><em>LCD shows live temperature (Line 1) and active set point (Line 2) in real-time</em></p>
+<p align="center"><em>Left: complete hardware setup &nbsp;·&nbsp; Right: LCD showing live temperature (Line 1) and active set point (Line 2)</em></p>
 
 ---
 
@@ -434,7 +432,6 @@ Working_IOT_DUAL_MODE_SET_POINT/
         │── 📋 lcd_defines.h               # LCD pin & command defines
         │── 📋 kpm_defines.h               # Keypad row/col pin map
         │── 📋 spi_defines.h               # SPI clock config
-        │── 📋 spi_eeprom_defines.h        # EEPROM opcodes (WREN, READ...)
         │── 📋 uart0_defines.h             # Baud rate & UART config
         │── 📋 rtc_defines.h               # RTC configuration
         │── 📋 pin_functions_definition.h  # PINSEL function constants
