@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/circuit_diagram.png" alt="IoT Dual Mode Set Point Controller" width="700"/>
+  <img src="project/full%20hardware.jpg" alt="IoT Dual Mode Set Point Controller - Full Hardware Setup" width="700"/>
 </p>
 
 <h1 align="center">🌡️ IoT Dual Mode Temperature Set Point Controller</h1>
@@ -25,6 +25,24 @@
 
 ---
 
+## 📌 Table of Contents
+
+- [About The Project](#-about-the-project)
+- [Key Features](#-key-features)
+- [Hardware Components](#-hardware-components)
+- [Circuit Details](#-circuit-details)
+- [Software Architecture](#-software-architecture)
+- [ThingSpeak Cloud Integration](#️-thingspeak-cloud-integration)
+- [Working Flow](#-working-flow)
+- [Project Structure](#-project-structure)
+- [Build & Flash](#️-build--flash)
+- [Configuration Reference](#️-configuration-reference)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
 ## 📖 About The Project
 
 An embedded IoT system built on the **LPC2148 (ARM7TDMI-S)** microcontroller that monitors ambient temperature using an **LM35 precision sensor**, displays readings on a **16×2 character LCD**, and supports **dual-mode set-point control**:
@@ -45,17 +63,10 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 ### 📺 LCD Display Output
 
 <p align="center">
-  <img src="images/lcd_display.png" alt="LCD Display showing Temperature and Set Point" width="450"/>
+  <img src="project/tep%20and%20se%20show%20display.png" alt="LCD Display showing Temperature and Set Point" width="700"/>
 </p>
 
 <p align="center"><em>LCD shows live temperature (Line 1) and active set point (Line 2) in real-time</em></p>
-
-```
-┌──────────────────────────┐
-│  TEMP: 32.50C            │  ← Live LM35 reading
-│  SP:   30.00C            │  ← Active set point
-└──────────────────────────┘
-```
 
 ---
 
@@ -104,33 +115,11 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 ## 🔌 Circuit Details
 
-### 📊 System Architecture
+### 🖥️ LCD (HD44780) — 8-bit Parallel Mode on Port 0
 
 <p align="center">
-  <img src="images/system_architecture.png" alt="System Architecture Block Diagram" width="650"/>
+  <img src="project/LCD.png" alt="LCD Circuit Connection" width="700"/>
 </p>
-
-### 📐 Complete Pin Mapping
-
-#### 🖥️ LCD (HD44780) — 8-bit Parallel Mode on Port 0
-
-```
-  LPC2148                          16x2 LCD
-  ┌──────┐                     ┌─────────────┐
-  │ P0.8 ├────────────────────►│ D0          │
-  │ P0.9 ├────────────────────►│ D1          │
-  │ P0.10├────────────────────►│ D2          │
-  │ P0.11├────────────────────►│ D3          │
-  │ P0.12├────────────────────►│ D4          │
-  │ P0.13├────────────────────►│ D5          │
-  │ P0.14├────────────────────►│ D6          │
-  │ P0.15├────────────────────►│ D7          │
-  │      │                     │             │
-  │ P0.16├────────────────────►│ RS          │
-  │ P0.17├────────────────────►│ EN          │
-  │ P0.18├────────────────────►│ RW          │
-  └──────┘                     └─────────────┘
-```
 
 | LCD Signal | LPC2148 Pin | Type | Description |
 |------------|-------------|------|-------------|
@@ -144,17 +133,11 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 ---
 
-#### 🌡️ LM35 Temperature Sensor → ADC Channel 1
+### 🌡️ LM35 Temperature Sensor → ADC Channel 1
 
-```
-         LM35DZ
-        ┌───┬───┐
-  3.3V──┤VCC│OUT├──► P0.28 (AD0.1)
-        │   │GND│
-        └───┴─┬─┘
-              │
-             GND
-```
+<p align="center">
+  <img src="project/LM35.png" alt="LM35 Temperature Sensor Connection" width="700"/>
+</p>
 
 | LM35 Pin | Connection | Notes |
 |----------|------------|-------|
@@ -176,21 +159,11 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 ---
 
-#### ⌨️ 4×4 Matrix Keypad — Port 1
+### ⌨️ 4×4 Matrix Keypad — Port 1
 
-```
-            COL0    COL1    COL2    COL3
-            P1.20   P1.21   P1.22   P1.23
-              │       │       │       │
-  ROW0 P1.16──┼───1───┼───2───┼───3───┼───A──
-              │       │       │       │
-  ROW1 P1.17──┼───4───┼───5───┼───6───┼───B──
-              │       │       │       │
-  ROW2 P1.18──┼───7───┼───8───┼───9───┼───C──
-              │       │       │       │
-  ROW3 P1.19──┼───.───┼───0───┼───e───┼───+──
-              │       │       │       │
-```
+<p align="center">
+  <img src="project/Keypad.png" alt="4x4 Matrix Keypad Connection" width="700"/>
+</p>
 
 | Line | LPC2148 Pin | Direction | Function |
 |------|-------------|-----------|----------|
@@ -210,26 +183,11 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 ---
 
-#### 📶 ESP-01 Wi-Fi Module — UART0
+### 📶 ESP-01 Wi-Fi Module — UART0
 
-```
-  LPC2148                       ESP-01
-  ┌──────┐                   ┌──────────┐
-  │ P0.0 ├──── TXD0 ───────►│ RX       │
-  │ P0.1 │◄─── RXD0 ────────┤ TX       │
-  │      │                   │          │
-  │ 3.3V ├───────────────────┤ VCC      │
-  │ 3.3V ├───────────────────┤ CH_PD    │
-  │  GND ├───────────────────┤ GND      │
-  └──────┘      10kΩ↑3.3V───┤ RST      │
-                             └──────────┘
-                                  │  )))  Wi-Fi
-                                  ▼
-                          ┌──────────────┐
-                          │  ThingSpeak  │
-                          │  IoT Cloud   │
-                          └──────────────┘
-```
+<p align="center">
+  <img src="project/ESP-01%20Wi-Fi%20Module.png" alt="ESP-01 WiFi Module Connection" width="700"/>
+</p>
 
 | ESP-01 Pin | LPC2148 Pin | Direction | Notes |
 |------------|-------------|-----------|-------|
@@ -255,22 +213,11 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 ---
 
-#### 💾 SPI EEPROM (25LC040) — SPI0
+### 💾 SPI EEPROM (25LC040) — SPI0
 
-```
-  LPC2148                     25LC EEPROM
-  ┌──────┐                   ┌──────────┐
-  │ P0.4 ├──── SCK ─────────┤ CLK      │
-  │ P0.5 │◄─── MISO ────────┤ SO       │
-  │ P0.6 ├──── MOSI ───────►│ SI       │
-  │ P0.7 ├──── CS̄ ──────────┤ CS̄       │
-  │      │                   │          │
-  │ 3.3V ├───────────────────┤ VCC      │
-  │ 3.3V ├───────────────────┤ HOLD̄     │
-  │ 3.3V ├───────────────────┤ WP̄       │
-  │  GND ├───────────────────┤ GND      │
-  └──────┘                   └──────────┘
-```
+<p align="center">
+  <img src="project/spi-eeprom.png" alt="SPI EEPROM Connection" width="700"/>
+</p>
 
 | EEPROM Pin | LPC2148 Pin | Notes |
 |------------|-------------|-------|
@@ -300,18 +247,7 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 ---
 
-#### 🔔 Buzzer — GPIO P0.23
-
-```
-  LPC2148
-  ┌──────┐       NPN (BC547)
-  │ P0.23├──── R(1kΩ) ──── Base
-  │      │                  │
-  │ 3.3V ├── Buzzer(+) ── Collector
-  │      │                Emitter
-  │  GND ├──────────────── GND
-  └──────┘
-```
+### 🔔 Buzzer — GPIO P0.23
 
 | Signal | Pin | Logic |
 |--------|-----|-------|
@@ -320,7 +256,7 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 ---
 
-#### ⚡ External Interrupt (EINT0) — Set Point Trigger
+### ⚡ External Interrupt (EINT0) — Set Point Trigger
 
 | Parameter | Value |
 |-----------|-------|
@@ -357,23 +293,9 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 ### Module Breakdown
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      APPLICATION LAYER                       │
-│                         main.c                               │
-│   (control loop, set-point logic, buzzer, timing)            │
-├──────────┬──────────┬──────────┬──────────┬─────────────────┤
-│  esp01   │   lcd    │   kpm    │   adc    │   spi_eeprom    │
-│  WiFi    │  Display │  Keypad  │  Sensor  │   Storage       │
-│  Driver  │  Driver  │  Driver  │  Driver  │   Driver        │
-├──────────┴────┬─────┴──────┬───┴──────┬───┴─────────────────┤
-│    uart0      │   delay    │   spi    │  pin_connect_block   │
-│  Serial I/O   │  Timing    │  Bus     │  Pin Muxing          │
-├───────────────┴────────────┴──────────┴──────────────────────┤
-│                     HARDWARE LAYER                            │
-│         LPC2148 Registers (lpc21xx.h) + Startup.s            │
-└──────────────────────────────────────────────────────────────┘
-```
+<p align="center">
+  <img src="project/Module%20Breakdown.png" alt="Software Module Breakdown" width="700"/>
+</p>
 
 | Module | Files | Responsibility |
 |--------|-------|---------------|
@@ -396,58 +318,24 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 ### 🔄 Dual Mode Operation Flow
 
-```
-                    ┌─────────────────────────┐
-                    │       POWER ON          │
-                    └───────────┬─────────────┘
-                                │
-                    ┌───────────▼─────────────┐
-                    │   INIT ALL PERIPHERALS  │
-                    │  LCD, ADC, KPM, SPI,    │
-                    │  UART0, RTC, EINT0      │
-                    └───────────┬─────────────┘
-                                │
-                    ┌───────────▼─────────────┐
-                    │  ESP-01: Connect WiFi   │
-                    │  SSID: "Ayan"           │
-                    │  AT+CWJAP command        │
-                    └───────────┬─────────────┘
-                                │
-                    ┌───────────▼─────────────┐
-                    │  Load Set Point from    │
-                    │  SPI EEPROM             │
-                    │  (Default: 30.0°C)      │
-                    └───────────┬─────────────┘
-                                │
-               ┌────────────────▼────────────────┐
-               │        ★ MAIN LOOP ★            │
-               │     (runs every 1 second)       │
-               └────┬───────────┬───────────┬────┘
-                    │           │           │
-         ┌──────────▼──┐  ┌────▼─────┐  ┌──▼──────────┐
-         │  EINT0 IRQ  │  │ TIMER    │  │  TIMER      │
-         │  flag == 1? │  │ 120s?    │  │  180s?      │
-         └──────┬──────┘  └────┬─────┘  └──┬──────────┘
-                │              │            │
-         ┌──────▼──────┐  ┌───▼──────┐  ┌──▼───────────┐
-         │ 🔘 LOCAL    │  │ ☁️ UPLOAD │  │ ☁️ SYNC      │
-         │ MODE        │  │ Temp →   │  │ Read Field2  │
-         │             │  │ Field 1  │  │ from cloud   │
-         │ Keypad      │  └──────────┘  │              │
-         │ → EEPROM    │                │ If changed:  │
-         │ → Cloud     │                │ → Update SP  │
-         │ → flag = 0  │                │ → Save EEPROM│
-         └─────────────┘                └──────────────┘
+<p align="center">
+  <img src="project/Dual%20Mode%20Operation%20Flow.png" alt="Dual Mode Operation Flow Diagram" width="700"/>
+</p>
 
-               EVERY CYCLE:
-               ├─ Read LM35 → Display on LCD
-               ├─ Compare temp vs set_point
-               └─ Buzzer ON if temp > SP
-```
+| Event | Mode | Action |
+|-------|------|--------|
+| **EINT0 Interrupt** (flag=1) | 🔘 Local | Keypad input → save to EEPROM → upload to ThingSpeak Field 2 |
+| **Every 120 seconds** | ☁️ Upload | Read LM35 → send temperature to ThingSpeak Field 1 |
+| **Every 180 seconds** | ☁️ Sync | Read ThingSpeak Field 2 → if changed, update set point + save EEPROM |
+| **Every 1 second** | 🔄 Loop | Read LM35 → update LCD → check buzzer |
 
 ---
 
-### ☁️ ThingSpeak Cloud Integration
+## ☁️ ThingSpeak Cloud Integration
+
+<p align="center">
+  <img src="project/thingspeak.png" alt="ThingSpeak Dashboard" width="700"/>
+</p>
 
 | Direction | Field | API Key Type | HTTP Method | Interval | Trigger |
 |-----------|-------|-------------|-------------|----------|---------|
@@ -457,11 +345,11 @@ When the measured temperature exceeds the active set point, a **buzzer alarm** i
 
 **ESP-01 AT Command Sequence (for upload):**
 ```
-AT+CIPCLOSE                          ← Close any stale TCP connection
-AT+CIPSTART="TCP","api.thingspeak.com",80   ← Open TCP to ThingSpeak
-AT+CIPSEND=52                        ← Declare payload length
-GET /update?api_key=XXXXX&field1=32.5\r\n\r\n  ← HTTP GET request
-AT+CIPCLOSE                          ← Close connection
+AT+CIPCLOSE                                          ← Close any stale TCP connection
+AT+CIPSTART="TCP","api.thingspeak.com",80            ← Open TCP to ThingSpeak
+AT+CIPSEND=52                                        ← Declare payload length
+GET /update?api_key=XXXXX&field1=32.5\r\n\r\n        ← HTTP GET request
+AT+CIPCLOSE                                          ← Close connection
 ```
 
 **ESP-01 AT Command Sequence (for sync/read):**
@@ -476,16 +364,54 @@ AT+CIPCLOSE
 
 ---
 
+## 🔄 Working Flow
+
+```
+Power ON
+   │
+   ├─► Initialize all peripherals (LCD, ADC, KPM, SPI, UART0, RTC, EINT0)
+   ├─► Connect ESP-01 to Wi-Fi ("Ayan" SSID)
+   ├─► Read set point from EEPROM (default: 30.0°C if empty)
+   │
+   └─► Loop forever:
+          │
+          ├─ Read LM35 temperature (°C)
+          ├─ Display on LCD:  Line1: TEMP: XX.XX C
+          │                   Line2: SP:   XX.XX C
+          │
+          ├─ If temperature > set point → Buzzer ON 🔔
+          │  Else                       → Buzzer OFF
+          │
+          ├─ Every 120s → Upload temp to ThingSpeak Field 1  📤
+          │
+          ├─ Every 180s → Sync set point from ThingSpeak Field 2  📥
+          │               If changed → save to EEPROM + update locally
+          │
+          └─ On EINT0 (keypad button) → Enter local set-point mode  ⌨️
+                                         Type value → Confirm with 'e'
+                                         Save to EEPROM + upload to cloud
+```
+
+---
+
 ## 📁 Project Structure
 
 ```
 Working_IOT_DUAL_MODE_SET_POINT/
 │
 ├── 📄 README.md                          # This file
-├── 🖼️ images/                            # Diagrams and images
-│   ├── circuit_diagram.png
-│   ├── system_architecture.png
-│   └── lcd_display.png
+├── 🖼️ project/                           # Project images & diagrams
+│   ├── full hardware.jpg                 # Complete hardware setup photo
+│   ├── tep and se show display.png       # LCD output screenshot
+│   ├── LCD.png                           # LCD circuit connection
+│   ├── LM35.png                          # LM35 sensor connection
+│   ├── Keypad.png                        # Keypad matrix connection
+│   ├── ESP-01 Wi-Fi Module.png           # ESP-01 wiring
+│   ├── spi-eeprom.png                    # SPI EEPROM connection
+│   ├── thingspeak.png                    # ThingSpeak dashboard
+│   ├── Module Breakdown.png              # Software architecture diagram
+│   ├── Dual Mode Operation Flow.png      # Dual mode flowchart
+│   └── Flash to LPC2148.png             # Flashing guide
 │
 └── Working_IOT_DUAL_MODE_SET_POINT/
     └── IOT_DUAL_MODE_SET_POINT/
@@ -552,6 +478,10 @@ Press F7  (or Project → Build Target)
 ```
 
 ### Flash to LPC2148
+
+<p align="center">
+  <img src="project/Flash%20to%20LPC2148.png" alt="Flash to LPC2148 Guide" width="700"/>
+</p>
 
 ```
 Flash Magic Settings:
