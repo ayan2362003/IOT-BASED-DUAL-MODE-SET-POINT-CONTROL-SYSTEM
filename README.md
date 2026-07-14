@@ -7,11 +7,22 @@
   <img src="https://img.shields.io/badge/Language-Embedded%20C-yellow?style=for-the-badge&logo=c&logoColor=white" alt="Language Badge"/>
 </p>
 
-# 🌡️ IoT Dual Mode Temperature Set Point Controller
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square" alt="Status"/>
+  <img src="https://img.shields.io/badge/License-Educational-lightgrey?style=flat-square" alt="License"/>
+  <img src="https://img.shields.io/badge/PRs-Welcome-blueviolet?style=flat-square" alt="PRs Welcome"/>
+  <a href="https://github.com/ayan2362003"><img src="https://img.shields.io/github/followers/ayan2362003?style=flat-square&label=Follow" alt="GitHub Follow"/></a>
+</p>
+
+<h1 align="center">🌡️ IoT Dual Mode Temperature Set Point Controller</h1>
 
 <p align="center">
   <strong>Real-time IoT-enabled temperature monitoring & set-point control</strong><br/>
   <em>Built on ARM7 (NXP LPC2148) • LM35 Sensor • ESP-01 Wi-Fi • ThingSpeak Cloud Dashboard</em>
+</p>
+
+<p align="center">
+  <sub>🌡️&nbsp;±0.5°C Accuracy&nbsp;&nbsp;·&nbsp;&nbsp;⌨️&nbsp;Local Keypad Override&nbsp;&nbsp;·&nbsp;&nbsp;☁️&nbsp;3-min Cloud Sync&nbsp;&nbsp;·&nbsp;&nbsp;💾&nbsp;Zero Data Loss on Power Cut</sub>
 </p>
 
 ---
@@ -132,7 +143,8 @@ This project is an embedded IoT system built on the **NXP LPC2148 ARM7TDMI-S** m
 
 ## ⚡ Circuit Details & Pin Connections
 
-### 📍 Complete Pin Mapping — LPC2148
+<details>
+<summary><strong>📍 Complete Pin Mapping — LPC2148</strong> (click to expand)</summary>
 
 #### Port 0 — Main Peripheral Bus
 
@@ -170,6 +182,8 @@ This project is an embedded IoT system built on the **NXP LPC2148 ARM7TDMI-S** m
 | Interrupt | Source | Pin | Trigger | Purpose |
 |-----------|--------|-----|---------|---------|
 | **EINT0** | Set-point push button | P0.3 | Edge-triggered (`EXTMODE=1`) | Sets `flag=1` → main loop enters keypad input mode (VIC Ch.15) |
+
+</details>
 
 ---
 
@@ -393,6 +407,9 @@ Step 5: Flash via ISP
 
 ## 🔍 Troubleshooting
 
+<details>
+<summary><strong>Click to expand common issues & fixes</strong></summary>
+
 | Problem | Possible Cause | Solution |
 |---------|---------------|----------|
 | LCD shows nothing | Contrast not set | Adjust V0 potentiometer |
@@ -406,9 +423,14 @@ Step 5: Flash via ISP
 | Keypad not responding | Wrong port pins | Verify P1.16–P1.23 connections |
 | Set point resets on boot | EEPROM blank (0xFF) | Normal on first boot — enter value via keypad |
 
+</details>
+
 ---
 
 ## 📁 File Structure
+
+<details>
+<summary><strong>Click to expand full source tree</strong></summary>
 
 ```
 Working_IOT_DUAL_MODE_SET_POINT/
@@ -460,6 +482,8 @@ Working_IOT_DUAL_MODE_SET_POINT/
         major.hex                          # Compiled firmware binary
 ```
 
+</details>
+
 ---
 
 ## 👨‍💻 Author
@@ -484,5 +508,13 @@ This project is developed and shared for **educational and academic purposes**. 
 ---
 
 <p align="center">
-  <strong>Built with ❤️ on ARM7 by Ayan</strong>
+  <img src="https://img.shields.io/badge/Platform-LPC2148_ARM7-informational?style=flat-square&logo=arm" alt="Platform"/>
+  <img src="https://img.shields.io/badge/Toolchain-Keil_MDK-success?style=flat-square" alt="Toolchain"/>
+  <img src="https://img.shields.io/badge/Cloud-ThingSpeak_IoT-orange?style=flat-square" alt="Cloud"/>
+  <img src="https://img.shields.io/badge/Language-Embedded_C-blue?style=flat-square&logo=c" alt="Language"/>
+</p>
+
+<p align="center">
+  <strong>Built with ❤️ on ARM7 by Ayan</strong><br/>
+  <sub>⭐ If this project helped you, consider giving it a star!</sub>
 </p>
